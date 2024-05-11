@@ -1,24 +1,11 @@
-import pandas as pd
-import seaborn as sns
-from sklearn.model_selection import train_test_split
-df = sns.load_dataset('mpg')
-df
-df.isnull().sum()
-df.dropna(inplace= True)
-df.isnull().sum()
-df
-x = df[['displacement','horsepower','weight','acceleration']]
-y = df.mpg
-x_train, x_test, y_train, y_test = train_test_split(x,y, test_size=0.15, random_state=42)
-from ctypes import LibraryLoader
-from sklearn.linear_model import LinearRegression
-model = LinearRegression()
-model.fit(x_train,y_train)
-model.score(x_test,y_test)
-from sklearn.tree import DecisionTreeRegressor
-model2 = DecisionTreeRegressor(criterion= 'poisson', random_state=0) #friedman_mse,squared_error,absolute_error
-model2.fit(x_train,y_train)
-model2.score(x_test,y_test)
+import streamlit as st
 import pickle
-filename = 'mpg_regression.sav'
-pickle.dump(model, open(filename, 'wb'))
+st.title('MPG ML Project')
+#'displacement','horsepower','weight','acceleration'
+displacement = st.number_input('Displacement', value=300, placeholder='enter a value for displacement')
+horsepower = st.number_input('Horsepower', value=130, placeholder='enter a value for horsepower')
+weight = st.number_input('Weight', value=3000, placeholder='enter a value for weight')
+acceleration = st.number_input('Acceleration', value=12, placeholder='enter a value for acceleration')
+loaded_model = pickle.load(open('mpg_regression.sav', 'rb'))
+prediction = loaded_model.predict([[displacement,horsepower,weight,acceleration]])
+st.subheader(f'predicted mpg value for above parameter is {prediction[0]}')
